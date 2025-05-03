@@ -35,13 +35,13 @@ struct LinkedList<T: Comparable> {
 	}
 
 	mutating func remove() -> T? {
-		guard let currentHead = head else {
+		guard let removedNode = head else { // << Check and declare
 			return nil
 		}
 
-		self.head = currentHead.next // << Update to the new head
+		self.head = removedNode.next // << Update to the new head
 
-		return currentHead.value // Return value
+		return removedNode.value // Return value
 	}
 
 	func search(value: T) -> Bool {
@@ -58,3 +58,121 @@ struct LinkedList<T: Comparable> {
 		return false
 	}
 }
+
+
+class NodeDoubleLinked<T> {
+	let value: T
+	var next: NodeDoubleLinked<T>?
+	var previous: NodeDoubleLinked<T>? // << In a double  linked list the node is linked with both neighbour
+
+	init(_ value: T) {
+		self.value = value
+	}
+}
+
+struct DoubleLinkedList<T: Comparable & Equatable> {
+	var head: NodeDoubleLinked<T>?
+	var tail: NodeDoubleLinked<T>?
+	
+	init(_ value: T) {
+		head = NodeDoubleLinked<T>(value)
+		tail = head 
+	}
+
+	mutating func insertToHead(_ value: T) {
+		let newNode = NodeDoubleLinked(value) // - Create the new Node
+
+		guard let currentHead = head else { // - If we don't have head the list is empty so head and tail are the same
+			head = newNode
+			tail = newNode
+			return
+		}
+
+		// List isn't empty
+		newNode.next = currentHead
+		currentHead.previous = newNode
+		head = newNode
+	}
+
+	mutating func insertToTail(_ value: T) {
+		let newNode = NodeDoubleLinked(value)
+
+		guard let currentTail = tail else {
+			head = newNode
+			tail = newNode
+			return
+		}
+
+		newNode.previous = currentTail
+		currentTail.next = newNode
+		tail = newNode
+	}
+
+	mutating func removeFromHead() -> T? {
+		guard let removedNode = head else {
+			return nil
+		}
+
+		head = removedNode.next // << Move head to next node
+
+		// We do the check again as we have a new head
+		if let head = head { // << I could just use head?.previous = nil bc Swift's unwrap
+			head.previous = nil
+		} else {
+			tail = nil // << If a list doesn't have a head it's empty,
+		}
+
+		return removedNode.value
+	}
+
+	// We do the same as when removing from HEAD but using tail instead
+	mutating func removeFromTail() -> T? {
+		guard let removedNode = tail else {
+			return nil
+		}
+
+		tail = removedNode.previous
+
+		if let tail = tail {
+			tail.next = nil
+		} else {
+			head = nil
+		}
+
+		return removedNode.value
+	}
+
+	func printList() {
+		var node = head
+
+		var printed = ""
+		while node != nil {
+			printed += "\(node!.value) -> "
+			node = node?.next
+		}
+
+		print("List \(printed)")
+	}
+}
+
+// MARK: - Just testing
+var doubledList = DoubleLinkedList<Int>(1)
+doubledList.insertToTail(2)
+doubledList.insertToTail(3)
+doubledList.insertToHead(0)
+
+doubledList.printList()
+
+print("Removed head: \(doubledList.removeFromHead())")
+
+doubledList.printList()
+
+print("Removed form HEAD \(doubledList.removeFromHead() ?? -1)")
+
+doubledList.printList()
+print("Removed form TAIL \(doubledList.removeFromTail() ?? -1)")
+
+doubledList.printList()
+
+print("Removed form TAIL \(doubledList.removeFromTail() ?? -1)")
+doubledList.printList()
