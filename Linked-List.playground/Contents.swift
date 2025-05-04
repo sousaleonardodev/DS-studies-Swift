@@ -57,9 +57,69 @@ struct LinkedList<T: Comparable> {
 
 		return false
 	}
+
+	mutating func reverseList() {
+		var newList: Node<T>? // << This will be the new head
+		var nextNode: Node<T>? // << Aux var to move the nodes
+
+		// [1 > 2 > 3 > 4]
+		//Will do:
+			// Store the next Node |e.g. nextNode: 2
+			// Make current head.next point to newList
+			// Set current to newList |e.g. newList: 1
+			// Set nextNode (previously stored) as head | e.g. head: [2 > 3 > 4] newList: [1 > nil]
+
+		// Example:
+			// 1º Loop: head = [1 > 2 > 3 > 4] | nextNode: 2 | newList = [1]
+			// 2º Loop: head = [2 > 3 > 4] | nextNode: 3 | newList = [2 > 1]
+			// 3º Loop: head = [3 > 4] | nextNode: 4 | newList [3 > 2 > 1]
+			// ...
+		while head != nil {
+			nextNode = head?.next
+			head?.next = newList
+			newList = head
+			head = nextNode
+		}
+
+		head = newList
+	}
+
+	func printList() {
+		var node = head
+
+		var printed = ""
+		while node != nil {
+			printed += "\(node!.value) -> "
+			node = node?.next
+		}
+
+		print("List \(printed)")
+	}
+
+	func findMiddleNode() -> Node<T>? {
+		var currentHead = head
+		var aheadHead = head?.next
+
+		// For each position we move in the list, the aheadHead moves 2 positions
+		while aheadHead != nil {
+			currentHead = currentHead?.next
+			aheadHead = aheadHead?.next?.next // << As we're using Swift's optional we don't need to care with nil
+		}
+
+		return currentHead
+	}
 }
 
+var linkedList = LinkedList<Int>(1)
+linkedList.insert(2)
+linkedList.insert(3)
+//linkedList.insert(4)
+//linkedList.insert(5)
 
+linkedList.printList()
+print("Middle: \(linkedList.findMiddleNode()?.value ?? -1)")
+
+// - MARK: Double Linked List
 class NodeDoubleLinked<T> {
 	let value: T
 	var next: NodeDoubleLinked<T>?
@@ -155,6 +215,7 @@ struct DoubleLinkedList<T: Comparable & Equatable> {
 	}
 }
 
+/*
 // MARK: - Just testing
 var doubledList = DoubleLinkedList<Int>(1)
 doubledList.insertToTail(2)
@@ -176,3 +237,5 @@ doubledList.printList()
 
 print("Removed form TAIL \(doubledList.removeFromTail() ?? -1)")
 doubledList.printList()
+*/
+
