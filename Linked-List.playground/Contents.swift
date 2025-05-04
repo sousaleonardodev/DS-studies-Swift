@@ -18,7 +18,7 @@ class Node<T> { // << We're using class because as struct is a value type it doe
 }
 
 // LIST
-struct LinkedList<T: Comparable> {
+struct LinkedList<T: Comparable & Equatable> {
 	var head: Node<T>?
 
 	// Init passing value to keep it
@@ -26,10 +26,18 @@ struct LinkedList<T: Comparable> {
 		head = Node<T>(value: value)
 	}
 
+	init(_ node: Node<T>) {
+		head = node
+	}
 
 	// Insert
 	mutating func insert(_ value: T) { // Using mutating to allow change the self.head property
 		let node = Node<T>(value: value)
+		node.next = head
+		head = node
+	}
+
+	mutating func insert(_ node: Node<T>) {
 		node.next = head
 		head = node
 	}
@@ -112,16 +120,35 @@ struct LinkedList<T: Comparable> {
 
 		return currentHead
 	}
+
+	// This function only works if we add the node in the list instead of the value
+	func hasCycle() -> Bool {
+		var normalSpeed: Node<T>? = head
+		var fastSpeed: Node<T>? = head
+
+		while fastSpeed != nil && fastSpeed?.next != nil {
+			normalSpeed = normalSpeed?.next
+			fastSpeed = fastSpeed?.next?.next
+
+			if normalSpeed === fastSpeed {
+				return true
+			}
+		}
+		return false
+	}
 }
 
+let cycleNode = Node(value: 5)
 var linkedList = LinkedList<Int>(1)
 linkedList.insert(2)
+linkedList.insert(cycleNode)
 linkedList.insert(3)
-//linkedList.insert(4)
-//linkedList.insert(5)
+linkedList.insert(cycleNode)
 
-linkedList.printList()
-print("Middle: \(linkedList.findMiddleNode()?.value ?? -1)")
+//linkedList.printList()
+//print("Middle: \(linkedList.findMiddleNode()?.value ?? -1)")
+
+print("Has cycle: \(linkedList.hasCycle())")
 
 // - MARK: Double Linked List
 class NodeDoubleLinked<T> {
