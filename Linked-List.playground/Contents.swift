@@ -64,16 +64,16 @@ struct LinkedList<T: Comparable> {
 
 		// [1 > 2 > 3 > 4]
 		//Will do:
-			// Store the next Node |e.g. nextNode: 2
-			// Make current head.next point to newList
-			// Set current to newList |e.g. newList: 1
-			// Set nextNode (previously stored) as head | e.g. head: [2 > 3 > 4] newList: [1 > nil]
+		// Store the next Node |e.g. nextNode: 2
+		// Make current head.next point to newList
+		// Set current to newList |e.g. newList: 1
+		// Set nextNode (previously stored) as head | e.g. head: [2 > 3 > 4] newList: [1 > nil]
 
 		// Example:
-			// 1º Loop: head = [1 > 2 > 3 > 4] | nextNode: 2 | newList = [1]
-			// 2º Loop: head = [2 > 3 > 4] | nextNode: 3 | newList = [2 > 1]
-			// 3º Loop: head = [3 > 4] | nextNode: 4 | newList [3 > 2 > 1]
-			// ...
+		// 1º Loop: head = [1 > 2 > 3 > 4] | nextNode: 2 | newList = [1]
+		// 2º Loop: head = [2 > 3 > 4] | nextNode: 3 | newList = [2 > 1]
+		// 3º Loop: head = [3 > 4] | nextNode: 4 | newList [3 > 2 > 1]
+		// ...
 		while head != nil {
 			nextNode = head?.next
 			head?.next = newList
@@ -86,14 +86,18 @@ struct LinkedList<T: Comparable> {
 
 	func printList() {
 		var node = head
+		var nodesString = ""
 
-		var printed = ""
 		while node != nil {
-			printed += "\(node!.value) -> "
+			nodesString += "\(node!.value)"
 			node = node?.next
+
+			if node != nil {
+				nodesString += " -> "
+			}
 		}
 
-		print("List \(printed)")
+		print("List \(nodesString)")
 	}
 
 	func findMiddleNode() -> Node<T>? {
@@ -133,10 +137,10 @@ class NodeDoubleLinked<T> {
 struct DoubleLinkedList<T: Comparable & Equatable> {
 	var head: NodeDoubleLinked<T>?
 	var tail: NodeDoubleLinked<T>?
-	
+
 	init(_ value: T) {
 		head = NodeDoubleLinked<T>(value)
-		tail = head 
+		tail = head
 	}
 
 	mutating func insertToHead(_ value: T) {
@@ -205,37 +209,41 @@ struct DoubleLinkedList<T: Comparable & Equatable> {
 	func printList() {
 		var node = head
 
-		var printed = ""
+		var nodesString = ""
 		while node != nil {
-			printed += "\(node!.value) -> "
+			nodesString += "\(node!.value)"
 			node = node?.next
+
+			if node != nil {
+				nodesString += " -> "
+			}
 		}
 
-		print("List \(printed)")
+		print("List \(nodesString)")
 	}
 }
 
 /*
-// MARK: - Just testing
-var doubledList = DoubleLinkedList<Int>(1)
-doubledList.insertToTail(2)
-doubledList.insertToTail(3)
-doubledList.insertToHead(0)
+ // MARK: - Just testing
+ var doubledList = DoubleLinkedList<Int>(1)
+ doubledList.insertToTail(2)
+ doubledList.insertToTail(3)
+ doubledList.insertToHead(0)
 
-doubledList.printList()
+ doubledList.printList()
 
-print("Removed head: \(doubledList.removeFromHead())")
+ print("Removed head: \(doubledList.removeFromHead())")
 
-doubledList.printList()
+ doubledList.printList()
 
-print("Removed form HEAD \(doubledList.removeFromHead() ?? -1)")
+ print("Removed form HEAD \(doubledList.removeFromHead() ?? -1)")
 
-doubledList.printList()
-print("Removed form TAIL \(doubledList.removeFromTail() ?? -1)")
+ doubledList.printList()
+ print("Removed form TAIL \(doubledList.removeFromTail() ?? -1)")
 
-doubledList.printList()
+ doubledList.printList()
 
-print("Removed form TAIL \(doubledList.removeFromTail() ?? -1)")
-doubledList.printList()
-*/
+ print("Removed form TAIL \(doubledList.removeFromTail() ?? -1)")
+ doubledList.printList()
+ */
 
