@@ -93,6 +93,12 @@ struct LinkedList<T: Comparable & Equatable> {
 	}
 
 	func printList() {
+		//Avoid infinit loop
+		guard !hasCycle() else {
+			print("Print aborted: Cycle detected")
+			return
+		}
+
 		var node = head
 		var nodesString = ""
 
@@ -126,6 +132,7 @@ struct LinkedList<T: Comparable & Equatable> {
 		var normalSpeed: Node<T>? = head
 		var fastSpeed: Node<T>? = head
 
+		// If we had a cycle, sometime in the infinity loop booth variable will met
 		while fastSpeed != nil && fastSpeed?.next != nil {
 			normalSpeed = normalSpeed?.next
 			fastSpeed = fastSpeed?.next?.next
@@ -145,7 +152,7 @@ linkedList.insert(cycleNode)
 linkedList.insert(3)
 linkedList.insert(cycleNode)
 
-//linkedList.printList()
+linkedList.printList()
 //print("Middle: \(linkedList.findMiddleNode()?.value ?? -1)")
 
 print("Has cycle: \(linkedList.hasCycle())")
