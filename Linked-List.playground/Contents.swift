@@ -148,12 +148,11 @@ struct LinkedList<T: Comparable & Equatable> {
 let cycleNode = Node(value: 5)
 var linkedList = LinkedList<Int>(1)
 linkedList.insert(2)
-linkedList.insert(cycleNode)
 linkedList.insert(3)
 linkedList.insert(cycleNode)
 
 linkedList.printList()
-//print("Middle: \(linkedList.findMiddleNode()?.value ?? -1)")
+print(linkedList.reverseList())
 
 print("Has cycle: \(linkedList.hasCycle())")
 
@@ -281,3 +280,62 @@ struct DoubleLinkedList<T: Comparable & Equatable> {
  doubledList.printList()
  */
 
+// MARK - MERGE 2 LISTs alg
+/*
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+	func mergeTwoLists(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+		guard var firstList: ListNode? = list1 else {
+			return list2
+		}
+
+		guard var secondList: ListNode? = list2 else {
+			return list1
+		}
+
+		var mergedList: ListNode?
+		var currentTail: ListNode?
+
+		while firstList != nil || secondList != nil {
+			var newNode: ListNode?
+
+			if let firstNode = firstList, let secondNode = secondList {
+				if firstNode.val < secondNode.val {
+					newNode = ListNode(firstNode.val)
+					firstList = firstNode.next
+				} else {
+					newNode = ListNode(secondNode.val)
+					secondList = secondNode.next
+				}
+			} else if let firstNode = firstList {
+				newNode = ListNode(firstNode.val)
+				firstList = firstNode.next
+			} else if let secondNode = secondList {
+				newNode = ListNode(secondNode.val)
+				secondList = secondNode.next
+			}
+
+			if mergedList == nil {
+				mergedList = newNode
+				currentTail = mergedList
+			} else {
+				currentTail?.next = newNode
+				currentTail = newNode
+			}
+		}
+
+		return mergedList
+	}
+}}
+}
+
+*/
